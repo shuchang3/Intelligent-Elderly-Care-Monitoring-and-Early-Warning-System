@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}实时告警 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}实时告警事件列表{% endblock %}
+
+{% block extra_css %}
+<style>
+    .alert-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+    .alert-fall {
+        border-left: 6px var(--danger-red) solid;
+        background: #fff2f0;
+    }
+    .alert-stranger {
+        border-left: 6px var(--warning-orange) solid;
+        background: #fff7e6;
+    }
+    .alert-danger-zone {
+        border-left: 6px #faad14 solid;
+        background: #fffbe6;
+    }
+    .alert-emotion {
+        border-left: 6px var(--primary) solid;
+        background: #e8f3ff;
+    }
+    .alert-img {
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    .tag-unhandle {
+        background: var(--danger-red);
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+    .tag-handled {
+        background: var(--success-green);
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5>实时推送告警（WebSocket自动刷新）</h5>
+    <div>
+        <a href="/alert/history" class="btn btn-outline-primary me-2">查看历史告警</a>
+        <button class="btn btn-outline-secondary" id="refreshBtn">手动刷新</button>
+    </div>
+</div>
+
+<div id="alertContainer">
+    <!-- 告警卡片由socket实时插入，初始占位 -->
+    <div class="text-secondary text-center py-5">等待告警数据推送...</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const alertContainer = document.getElementById("alertContainer");
+const refreshBtn = document.getElementById("refreshBtn");
+
+// 手动刷新按钮
+refreshBtn.addEventListener("click", () => {
+    alertContainer.innerHTML = "<div class='text-center py-5'>正在加载最新告警...</div>";
+    setTimeout(()=>location.reload(), 800);
+})
+
+// 接收全局socket推送的告警（复用base.html的socket对象）
+socket.on("new_alert", function(data) {
+    // 清空占位提示
+    if(alertContainer.querySelector(".text-secondary")) alertContainer.innerHTML = "";
+
+    let typeText, cardClass;
+    switch(data.event_type){
+        case "fall":
+            typeText = "老人摔倒【紧急】";
+            cardClass = "alert-fall";
+            break;
+        case "stranger":
+            typeText = "陌生人闯入";
+            cardClass = "alert-stranger";
+            break;
+        case "danger_zone":
+            typeText = "危险区域闯入";
+            cardClass = "alert-danger-zone";
+            break;
+        case "emotion":
+            typeText = "持续负面情绪预警";
+            cardClass = "alert-emotion";
+            break;
+        default:
+            typeText = "未知告警";
+            cardClass = "";
+    }
+
+    const html = `
+        <div class="alert-card ${cardClass} d-flex gap-4 align-items-start">
+            <img class="alert-img" src="${data.screenshot || ''}" alt="告警截图">
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-1">${typeText}</h6>
+                    <span class="tag-unhandle">未处理</span>
+                </div>
+                <p class="mb-1 text-secondary">
+                    监控点位：${data.camera_id} | 发生时间：${data.time}
+                </p>
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-primary play-video" data-time="${data.time}" data-cam="${data.camera_id}">查看录像回放</button>
+                    <button class="btn btn-sm btn-success handle-alert ms-2" data-id="${data.id || ''}">标记已处理</button>
+                </div>
+            </div>
+        </div>
+    `;
+    // 新告警插入最顶部
+    alertContainer.insertAdjacentHTML("afterbegin", html);
+
+    // 录像回放弹窗模拟
+    document.querySelectorAll(".play-video").forEach(btn=>{
+        btn.onclick = ()=>{
+            const t = btn.dataset.time;
+            const cam = btn.dataset.cam;
+            alert(`正在加载【${cam}】${t} 时段监控录像`);
+        }
+    })
+    // 标记已处理模拟
+    document.querySelectorAll(".handle-alert").forEach(btn=>{
+        btn.onclick = ()=>{
+            const card = btn.closest(".alert-card");
+            card.querySelector(".tag-unhandle").outerHTML = `<span class="tag-handled">已处置</span>`;
+            alert("已标记该告警为处理完成");
+        }
+    })
+})
+</script>
+{% endblock %}

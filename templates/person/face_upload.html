@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}人脸录入/编辑 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}新增人员人脸信息{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-box {
+        border:2px dashed #ccc;border-radius:8px;padding:40px;text-align:center;
+        cursor:pointer;margin-bottom:20px;
+    }
+    .upload-box:hover {border-color:var(--primary);}
+    .preview-img {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 10px;
+        border-radius: 4px;
+        display: none;
+    }
+    .model-row {
+        display:flex;gap:12px;margin-top:20px;
+    }
+    .model-card {
+        flex:1;background:#fff;padding:12px;border-radius:8px;text-align:center;
+    }
+    .model-img {width:100%;height:160px;background:#eee;margin:8px 0;object-fit:contain;}
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/person/list" class="btn btn-outline-secondary mb-4">← 返回人员列表</a>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="mb-3">人员基础信息</h5>
+            <div class="mb-3">
+                <label class="form-label">姓名</label>
+                <input class="form-control" id="personName" placeholder="请输入姓名">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">人员类型</label>
+                <select class="form-select" id="personType">
+                    <option value="old">老年人</option>
+                    <option value="worker">护理义工</option>
+                    <option value="family">老人家属</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">备注（房间/负责区域）</label>
+                <textarea class="form-control" id="personNote" rows="2"></textarea>
+            </div>
+            <h6 class="mt-4">上传人脸照片</h6>
+            <div class="upload-box" id="uploadArea">
+                <p id="uploadText">点击或拖拽图片到此上传</p>
+                <img id="previewImg" class="preview-img" alt="预览图">
+                <input type="file" hidden id="faceFile" accept="image/*">
+            </div>
+            <button class="btn btn-primary w-100 mt-3" id="saveBtn" onclick="savePerson()">保存入库</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="mb-3">三模型人脸检测预览（项目算法创新点）</h5>
+            <div class="model-row">
+                <div class="model-card">
+                    <p>MTCNN 检测</p>
+                    <img class="model-img" alt="MTCNN识别效果图">
+                </div>
+                <div class="model-card">
+                    <p>Dlib 关键点</p>
+                    <img class="model-img" alt="Dlib识别效果图">
+                </div>
+                <div class="model-card">
+                    <p>Haar-AdaBoost</p>
+                    <img class="model-img" alt="Haar识别效果图">
+                </div>
+            </div>
+            <p class="text-secondary mt-3 small">三种模型融合提升识别准确率，降低遮挡、侧脸误检</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 上传区域点击触发文件选择
+const uploadArea = document.getElementById("uploadArea");
+const faceFile = document.getElementById("faceFile");
+const previewImg = document.getElementById("previewImg");
+const uploadText = document.getElementById("uploadText");
+let selectedFile = null;
+
+uploadArea.onclick = ()=> faceFile.click();
+
+faceFile.onchange = (e)=>{
+    if(e.target.files.length > 0){
+        selectedFile = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            // 显示预览图片
+            previewImg.src = event.target.result;
+            previewImg.style.display = 'block';
+            // 隐藏提示文字
+            uploadText.style.display = 'none';
+        };
+        
+        reader.readAsDataURL(selectedFile);
+    }
+};
+
+// 支持拖拽上传
+uploadArea.ondragover = (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'var(--primary)';
+    uploadArea.style.backgroundColor = '#f0f7ff';
+};
+
+uploadArea.ondragleave = (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#ccc';
+    uploadArea.style.backgroundColor = '';
+};
+
+uploadArea.ondrop = (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#ccc';
+    uploadArea.style.backgroundColor = '';
+    
+    const files = e.dataTransfer.files;
+    if(files.length > 0 && files[0].type.startsWith('image/')){
+        selectedFile = files[0];
+        faceFile.files = files;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            previewImg.src = event.target.result;
+            previewImg.style.display = 'block';
+            uploadText.style.display = 'none';
+        };
+        reader.readAsDataURL(selectedFile);
+    }
+};
+
+// 保存人员信息
+function savePerson() {
+    const name = document.getElementById('personName').value.trim();
+    const type = document.getElementById('personType').value;
+    const note = document.getElementById('personNote').value.trim();
+    
+    // 验证必填项
+    if(!name) {
+        alert('请输入姓名！');
+        return;
+    }
+    
+    if(!selectedFile) {
+        alert('请上传人脸照片！');
+        return;
+    }
+    
+    // 构建FormData
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('type', type);
+    formData.append('note', note);
+    formData.append('file', selectedFile);
+    
+    // 显示加载状态
+    const saveBtn = document.getElementById('saveBtn');
+    const originalText = saveBtn.innerText;
+    saveBtn.innerText = '保存中...';
+    saveBtn.disabled = true;
+    
+    // 发送到后端
+    fetch('/api/person/save', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert('人员信息保存成功！');
+            // 清空表单
+            document.getElementById('personName').value = '';
+            document.getElementById('personNote').value = '';
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            uploadText.style.display = 'block';
+            selectedFile = null;
+            // 跳转到列表页
+            window.location.href = '/person/list';
+        } else {
+            alert('保存失败：' + (data.message || '未知错误'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('保存失败：' + error.message);
+    })
+    .finally(() => {
+        saveBtn.innerText = originalText;
+        saveBtn.disabled = false;
+    });
+}
+</script>
+{% endblock %}

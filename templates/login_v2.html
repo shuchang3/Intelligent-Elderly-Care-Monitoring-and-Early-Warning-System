@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 - 腰间北斗智能监护系统</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/global.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+  <div class="login-wrap">
+    <main class="login-card">
+      <div class="login-title">腰间北斗智能监护系统</div>
+      <div class="login-subtitle">面向养老场景的计算机视觉感知与智能预警系统</div>
+      {% if error %}<div class="alert alert-danger py-2" role="alert">{{ error }}</div>{% endif %}
+      <form action="/login" method="post" class="login-form">
+        <input type="hidden" name="csrf_token" value="{{ login_csrf_token }}">
+        <div class="mb-3"><label for="username" class="form-label">账号</label><input id="username" class="form-control" name="username" required autocomplete="username" maxlength="80" autofocus></div>
+        <div class="mb-3"><label for="password" class="form-label">密码</label><input id="password" class="form-control" name="password" type="password" required autocomplete="current-password" maxlength="200"></div>
+        <p class="role-hint">登录后将根据账号自动进入对应的管理页面</p>
+        <button class="login-btn" type="submit">登录系统</button>
+      </form>
+      <p class="login-help">账号及权限由机构后台统一管理</p>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Template only. Replace domain and certificate paths with approved local values.
+# Do not run this as a public deployment or bypass certificate warnings.
+https://elder-care.example.invalid {
+    tls C:/certificates/elder-care.crt C:/certificates/elder-care.key
+    handle /ws/events {
+        reverse_proxy 127.0.0.1:8081
+    }
+    handle {
+        reverse_proxy 127.0.0.1:5001
+    }
+}

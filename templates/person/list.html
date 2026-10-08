@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}人员人脸库管理 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}老人/义工/家属人脸库{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tab-item {margin-right:20px;font-size:18px;cursor:pointer;}
+    .tab-active {color:var(--primary);border-bottom:2px solid var(--primary);padding-bottom:6px;}
+    .person-card {
+        background:#fff;border-radius:8px;padding:16px;margin-bottom:16px;
+        display:flex;gap:16px;align-items:center;
+    }
+    .face-img {width:90px;height:90px;object-fit:cover;border-radius:6px;}
+    .tag-old {background:#cce5ff;color:#004080;padding:2px 8px;border-radius:4px;}
+    .tag-worker {background:#d4edda;color:#15572;padding:2px 8px;border-radius:4px;}
+    .tag-family {background:#fff3cd;color:#856404;padding:2px 8px;border-radius:4px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <span class="tab-item tab-active" data-type="all">全部人员</span>
+        <span class="tab-item" data-type="old">老年人</span>
+        <span class="tab-item" data-type="worker">义工/护理</span>
+        <span class="tab-item" data-type="family">家属</span>
+    </div>
+    <a href="/person/upload" class="btn btn-primary">新增人员人脸</a>
+</div>
+
+<div id="personWrap" class="row">
+    <!-- 模拟人员卡片 -->
+    <div class="col-md-4">
+        <div class="person-card">
+            <img class="face-img" src="" alt="人脸">
+            <div>
+                <h6>张爷爷</h6>
+                <span class="tag-old">老人</span>
+                <p class="text-secondary mb-1">房间：一号卧室</p>
+                <button class="btn btn-sm btn-outline-primary mt-1" onclick="location.href='/person/upload'">编辑</button>
+                <button class="btn btn-sm btn-outline-danger mt-1">删除</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="person-card">
+            <img class="face-img" src="" alt="人脸">
+            <div>
+                <h6>李护工</h6>
+                <span class="tag-worker">护理义工</span>
+                <p class="text-secondary mb-1">负责一楼区域</p>
+                <button class="btn btn-sm btn-outline-primary mt-1" onclick="location.href='/person/upload'">编辑</button>
+                <button class="btn btn-sm btn-outline-danger mt-1">删除</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="person-card">
+            <img class="face-img" src="" alt="人脸">
+            <div>
+                <h6>王先生</h6>
+                <span class="tag-family">家属</span>
+                <p class="text-secondary mb-1">绑定：张爷爷</p>
+                <button class="btn btn-sm btn-outline-primary mt-1" onclick="location.href='/person/upload'">编辑</button>
+                <button class="btn btn-sm btn-outline-danger mt-1">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 分类标签切换
+const tabs = document.querySelectorAll(".tab-item");
+tabs.forEach(tab=>{
+    tab.onclick = ()=>{
+        tabs.forEach(t=>t.classList.remove("tab-active"));
+        tab.classList.add("tab-active");
+        alert("切换筛选："+tab.innerText);
+    }
+})
+</script>
+{% endblock %}

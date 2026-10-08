@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}义工互动统计 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}义工与老人互动时长统计报表{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-box {
+        background: #fff;
+        padding: 18px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .chart-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .chart-height {
+        height: 320px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5>义工服务互动数据分析</h5>
+    <a href="/analysis/emotion" class="btn btn-outline-primary">切换情感报表</a>
+</div>
+
+<!-- 筛选区域 -->
+<div class="filter-box row g-3 align-items-center">
+    <div class="col-md-3">
+        <label>统计周期</label>
+        <select class="form-select">
+            <option>近7天</option>
+            <option>近30天</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label>指定义工</label>
+        <select class="form-select">
+            <option value="">全部护理人员</option>
+            <option>李护工</option>
+            <option>张义工</option>
+        </select>
+    </div>
+    <div class="col-md-3 align-self-end">
+        <button class="btn btn-primary">刷新统计</button>
+        <button class="btn btn-outline-secondary ms-2">导出Excel</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="chart-card">
+            <h6>每日总互动时长（单位：分钟）</h6>
+            <div id="barChart" class="chart-height"></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="chart-card">
+            <h6>各义工累计服务时长对比</h6>
+            <div id="bar2Chart" class="chart-height"></div>
+        </div>
+    </div>
+</div>
+
+<div class="chart-card">
+    <h6>低活跃度老人清单（长期缺少互动）</h6>
+    <table class="table table-hover mt-3">
+        <thead>
+            <tr>
+                <th>老人姓名</th>
+                <th>近7天总互动时长</th>
+                <th>最低互动标准</th>
+                <th>预警等级</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>王婆婆</td>
+                <td>18分钟</td>
+                <td>60分钟/周</td>
+                <td><span class="text-danger">重点关怀</span></td>
+                <td><button class="btn btn-sm btn-primary">查看记录</button></td>
+            </tr>
+            <tr>
+                <td>刘爷爷</td>
+                <td>35分钟</td>
+                <td>60分钟/周</td>
+                <td><span class="text-warning">关注</span></td>
+                <td><button class="btn btn-sm btn-primary">查看记录</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script>
+const bar1 = echarts.init(document.getElementById("barChart"));
+const bar2 = echarts.init(document.getElementById("bar2Chart"));
+
+bar1.setOption({
+    xAxis: {data:["周一","周二","周三","周四","周五","周六","周日"]},
+    yAxis: {name:"分钟"},
+    series: [{type:"bar",data:[22,30,26,34,28,42,34]}]
+})
+
+bar2.setOption({
+    xAxis: {data:["李护工","张义工","陈护理"]},
+    yAxis: {name:"总分钟"},
+    series: [{type:"bar",color:"#1677ff",data:[420,316,278]}]
+})
+
+window.addEventListener("resize",()=>{
+    bar1.resize();
+    bar2.resize();
+})
+</script>
+{% endblock %}

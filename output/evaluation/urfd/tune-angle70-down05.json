@@ -1,0 +1,955 @@
+{
+  "createdAt": "2026-09-01T16:49:19+0800",
+  "split": "tune",
+  "device": "0",
+  "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "torch": "2.13.0+cu126",
+  "model": "D:\\IJ\\shijie-wujiang-master\\shijie-wujiang-master\\yolov8n-pose.pt",
+  "modelSha256": "c6fa93dd1ee4a2c18c900a45c1d864a1c6f7aba75d84f91648a30b7fb641d212",
+  "config": "D:\\IJ\\shijie-wujiang-master\\shijie-wujiang-master\\tmp\\evaluation-configs\\angle70-down05.yaml",
+  "configSha256": "b9cfc82c20a26c93084a1690b54ea06f5994c4425ca83e0d1e714be9e886bdfd",
+  "summary": {
+    "TP": 7,
+    "FP": 0,
+    "TN": 10,
+    "FN": 3,
+    "precision": 1.0,
+    "recall": 0.7,
+    "falseAlertsPerHour": 0.0,
+    "meanPoseCoverage": 0.8962168300154221,
+    "meanProcessingFps": 116.31623562285868,
+    "medianLatencyFromGroundMs": 307,
+    "duplicateEvents": 0,
+    "gates": {
+      "precisionAtLeast0.80": true,
+      "recallAtLeast0.90": false,
+      "falseAlertsPerHourAtMost1": true,
+      "noDuplicateEvents": true
+    }
+  },
+  "clips": [
+    {
+      "clipId": "fall-01",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        4125
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 2736,
+      "groundContactMs": 3737,
+      "eventEndMs": 5305,
+      "latencyFromGroundMs": 388,
+      "frames": 160,
+      "durationSeconds": 5.279999999999999,
+      "poseCoverage": 0.71875,
+      "maxDownwardVelocity": 0.9124919621631347,
+      "maxAspectRatio": 1.7352280853614166,
+      "maxTorsoAngle": 70.59900062205999,
+      "stateTransitions": [
+        {
+          "timeMs": 3069,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.30334152356542676,
+          "isLying": false,
+          "aspectRatio": 0.49084482961724124,
+          "torsoAngle": 10.535775429595239,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 3564,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.6144306876442671,
+          "isLying": true,
+          "aspectRatio": 1.1215755271313375,
+          "torsoAngle": 69.19557981097797,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 4125,
+          "from": "down",
+          "to": "alerted",
+          "velocity": 0.25527729329838095,
+          "isLying": true,
+          "aspectRatio": 1.6781311680940643,
+          "torsoAngle": 3.0685874309083103,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 3.52918710000813,
+      "processingFps": 45.336219210262726
+    },
+    {
+      "clipId": "fall-02",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        2475
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 1301,
+      "groundContactMs": 2302,
+      "eventEndMs": 3637,
+      "latencyFromGroundMs": 173,
+      "frames": 110,
+      "durationSeconds": 3.63,
+      "poseCoverage": 0.7363636363636363,
+      "maxDownwardVelocity": 0.6730831030643345,
+      "maxAspectRatio": 2.7541902043936384,
+      "maxTorsoAngle": 89.39492050625495,
+      "stateTransitions": [
+        {
+          "timeMs": 1881,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.28579620399860456,
+          "isLying": false,
+          "aspectRatio": 0.8625280931698224,
+          "torsoAngle": 44.82216179805362,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 1947,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.09808227269336393,
+          "isLying": true,
+          "aspectRatio": 1.0589855254377092,
+          "torsoAngle": 56.82200009771878,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 2475,
+          "from": "down",
+          "to": "alerted",
+          "velocity": 0.10112305568238207,
+          "isLying": true,
+          "aspectRatio": 2.396165356234932,
+          "torsoAngle": 83.26545956494247,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 0.9039493000600487,
+      "processingFps": 121.68824069302646
+    },
+    {
+      "clipId": "fall-03",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        6426
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 4929,
+      "groundContactMs": 5949,
+      "eventEndMs": 7207,
+      "latencyFromGroundMs": 477,
+      "frames": 215,
+      "durationSeconds": 7.3100000000000005,
+      "poseCoverage": 0.9534883720930233,
+      "maxDownwardVelocity": 0.6785257189881561,
+      "maxAspectRatio": 2.1361926505894755,
+      "maxTorsoAngle": 66.3034722794323,
+      "stateTransitions": [
+        {
+          "timeMs": 5372,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.3046952041925186,
+          "isLying": false,
+          "aspectRatio": 0.5778061848648449,
+          "torsoAngle": 11.970217498398785,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 5916,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.5924956471312273,
+          "isLying": true,
+          "aspectRatio": 1.0840874308937136,
+          "torsoAngle": 8.205097157939079,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 6426,
+          "from": "down",
+          "to": "alerted",
+          "velocity": -0.15356042026694375,
+          "isLying": true,
+          "aspectRatio": 2.0462116250749385,
+          "torsoAngle": 66.3034722794323,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 1.8009068001993,
+      "processingFps": 119.38430127322897
+    },
+    {
+      "clipId": "fall-04",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": false,
+      "outcome": "FN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": 433,
+      "groundContactMs": 1434,
+      "eventEndMs": 3170,
+      "latencyFromGroundMs": null,
+      "frames": 96,
+      "durationSeconds": 3.1679999999999997,
+      "poseCoverage": 0.625,
+      "maxDownwardVelocity": 1.0928250322438264,
+      "maxAspectRatio": 2.559942976992126,
+      "maxTorsoAngle": 89.26169640121114,
+      "stateTransitions": [
+        {
+          "timeMs": 957,
+          "from": "normal",
+          "to": "down",
+          "velocity": 0.008109844092166784,
+          "isLying": true,
+          "aspectRatio": 1.1066949783767535,
+          "torsoAngle": 72.23889611356826,
+          "reason": "lying posture without rapid descent"
+        }
+      ],
+      "processingSeconds": 0.8130276000592858,
+      "processingFps": 118.0771722792679
+    },
+    {
+      "clipId": "fall-05",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        3910
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 2602,
+      "groundContactMs": 3603,
+      "eventEndMs": 5031,
+      "latencyFromGroundMs": 307,
+      "frames": 151,
+      "durationSeconds": 5.134,
+      "poseCoverage": 0.8013245033112583,
+      "maxDownwardVelocity": 1.1038347786548084,
+      "maxAspectRatio": 1.5269649308549538,
+      "maxTorsoAngle": 89.88258498905728,
+      "stateTransitions": [
+        {
+          "timeMs": 3162,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.2996078893250112,
+          "isLying": false,
+          "aspectRatio": 0.5096383020757906,
+          "torsoAngle": 19.505066895181827,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 3366,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.12812567692176952,
+          "isLying": true,
+          "aspectRatio": 0.7614373818816682,
+          "torsoAngle": 74.70454200317923,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 3910,
+          "from": "down",
+          "to": "alerted",
+          "velocity": 0.379230677632005,
+          "isLying": true,
+          "aspectRatio": 1.507051295776613,
+          "torsoAngle": 71.9617809848716,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 1.2330828001722693,
+      "processingFps": 122.45730779709551
+    },
+    {
+      "clipId": "fall-06",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        1749
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 333,
+      "groundContactMs": 1334,
+      "eventEndMs": 3303,
+      "latencyFromGroundMs": 415,
+      "frames": 100,
+      "durationSeconds": 3.3,
+      "poseCoverage": 1.0,
+      "maxDownwardVelocity": 0.5833849762425273,
+      "maxAspectRatio": 2.3715683732514337,
+      "maxTorsoAngle": 89.6469871103954,
+      "stateTransitions": [
+        {
+          "timeMs": 1089,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.2977898626616512,
+          "isLying": false,
+          "aspectRatio": 0.7415915289056676,
+          "torsoAngle": 33.36885591089017,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 1221,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.30597026902015795,
+          "isLying": true,
+          "aspectRatio": 1.061009090490971,
+          "torsoAngle": 44.37342731565239,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 1749,
+          "from": "down",
+          "to": "alerted",
+          "velocity": -0.031072684008666064,
+          "isLying": true,
+          "aspectRatio": 1.5802815082862578,
+          "torsoAngle": 68.5153318202098,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 0.8334728002082556,
+      "processingFps": 119.97992013058315
+    },
+    {
+      "clipId": "fall-07",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        3927
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 2802,
+      "groundContactMs": 3804,
+      "eventEndMs": 5172,
+      "latencyFromGroundMs": 123,
+      "frames": 156,
+      "durationSeconds": 5.148,
+      "poseCoverage": 0.8653846153846154,
+      "maxDownwardVelocity": 0.5597556480253582,
+      "maxAspectRatio": 2.1561674630114602,
+      "maxTorsoAngle": 89.95758132018636,
+      "stateTransitions": [
+        {
+          "timeMs": 3135,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.36204053898050337,
+          "isLying": false,
+          "aspectRatio": 0.44646525361038053,
+          "torsoAngle": 26.51595292527669,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 3366,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.2400511443012899,
+          "isLying": true,
+          "aspectRatio": 0.7775507101416315,
+          "torsoAngle": 74.07523420035626,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 3927,
+          "from": "down",
+          "to": "alerted",
+          "velocity": 0.49092745540118016,
+          "isLying": true,
+          "aspectRatio": 1.5463005242271324,
+          "torsoAngle": 55.9948363020961,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 1.2894902001135051,
+      "processingFps": 120.97804231956813
+    },
+    {
+      "clipId": "fall-08",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": false,
+      "outcome": "FN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": 967,
+      "groundContactMs": 1968,
+      "eventEndMs": 3003,
+      "latencyFromGroundMs": null,
+      "frames": 91,
+      "durationSeconds": 3.0029999999999997,
+      "poseCoverage": 0.978021978021978,
+      "maxDownwardVelocity": 0.7370117938879761,
+      "maxAspectRatio": 3.201505590574506,
+      "maxTorsoAngle": 89.79292288946108,
+      "stateTransitions": [
+        {
+          "timeMs": 1188,
+          "from": "normal",
+          "to": "down",
+          "velocity": -0.0547510204893167,
+          "isLying": true,
+          "aspectRatio": 0.8154329510524796,
+          "torsoAngle": 71.32781770392377,
+          "reason": "lying posture without rapid descent"
+        }
+      ],
+      "processingSeconds": 0.7843122000340372,
+      "processingFps": 116.02522566402871
+    },
+    {
+      "clipId": "fall-09",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        5181
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 4004,
+      "groundContactMs": 5005,
+      "eventEndMs": 6139,
+      "latencyFromGroundMs": 176,
+      "frames": 185,
+      "durationSeconds": 6.1049999999999995,
+      "poseCoverage": 0.8594594594594595,
+      "maxDownwardVelocity": 0.5794284319636775,
+      "maxAspectRatio": 1.7860363029137811,
+      "maxTorsoAngle": 78.08861968650162,
+      "stateTransitions": [
+        {
+          "timeMs": 4191,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.3238217999236759,
+          "isLying": false,
+          "aspectRatio": 0.36369222420139086,
+          "torsoAngle": 10.604425239096926,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 4653,
+          "from": "falling",
+          "to": "down",
+          "velocity": 0.25130979942552983,
+          "isLying": true,
+          "aspectRatio": 1.1510042015948518,
+          "torsoAngle": 70.4790834964727,
+          "reason": "falling transition reached the ground"
+        },
+        {
+          "timeMs": 5181,
+          "from": "down",
+          "to": "alerted",
+          "velocity": 0.30223821914995064,
+          "isLying": true,
+          "aspectRatio": 1.533632834189308,
+          "torsoAngle": 45.4211771542051,
+          "reason": "rapid descent followed by persistent lying"
+        }
+      ],
+      "processingSeconds": 1.5130613001529127,
+      "processingFps": 122.2686747597758
+    },
+    {
+      "clipId": "fall-10",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": false,
+      "outcome": "FN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": 1301,
+      "groundContactMs": 2302,
+      "eventEndMs": 4304,
+      "latencyFromGroundMs": null,
+      "frames": 130,
+      "durationSeconds": 4.29,
+      "poseCoverage": 0.7153846153846154,
+      "maxDownwardVelocity": 0.7561643195874764,
+      "maxAspectRatio": 2.4736147970480897,
+      "maxTorsoAngle": 89.88136259623263,
+      "stateTransitions": [
+        {
+          "timeMs": 1518,
+          "from": "normal",
+          "to": "down",
+          "velocity": -0.10878220953122564,
+          "isLying": true,
+          "aspectRatio": 1.057793574542824,
+          "torsoAngle": 71.13133051664929,
+          "reason": "lying posture without rapid descent"
+        }
+      ],
+      "processingSeconds": 1.0687615999486297,
+      "processingFps": 121.63610669231424
+    },
+    {
+      "clipId": "adl-01",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 150,
+      "durationSeconds": 5.1000000000000005,
+      "poseCoverage": 0.96,
+      "maxDownwardVelocity": 0.3454788058411839,
+      "maxAspectRatio": 0.9150589558284562,
+      "maxTorsoAngle": 43.48308350063482,
+      "stateTransitions": [
+        {
+          "timeMs": 3672,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.25842844271192333,
+          "isLying": false,
+          "aspectRatio": 0.6647439809653203,
+          "torsoAngle": 40.67462304858332,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 4896,
+          "from": "falling",
+          "to": "normal",
+          "velocity": -0.018387682297650282,
+          "isLying": false,
+          "aspectRatio": 0.9123172475955442,
+          "torsoAngle": 33.765056047128674,
+          "reason": "falling candidate timed out"
+        }
+      ],
+      "processingSeconds": 1.2608073998708278,
+      "processingFps": 118.9713829529933
+    },
+    {
+      "clipId": "adl-02",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 180,
+      "durationSeconds": 6.12,
+      "poseCoverage": 0.8277777777777777,
+      "maxDownwardVelocity": 0.3181347659989896,
+      "maxAspectRatio": 0.84352272129082,
+      "maxTorsoAngle": 18.215410366387957,
+      "stateTransitions": [
+        {
+          "timeMs": 4284,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.2578799631081389,
+          "isLying": false,
+          "aspectRatio": 0.41790713653633577,
+          "torsoAngle": 3.5966065490826638,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 5508,
+          "from": "falling",
+          "to": "normal",
+          "velocity": -0.0822597858952536,
+          "isLying": false,
+          "aspectRatio": 0.8229397447447349,
+          "torsoAngle": 8.777025212042076,
+          "reason": "falling candidate timed out"
+        },
+        {
+          "timeMs": 5780,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.29043870813706335,
+          "isLying": false,
+          "aspectRatio": 0.8240008866458243,
+          "torsoAngle": 0.9280088399284873,
+          "reason": "rapid downward hip movement"
+        }
+      ],
+      "processingSeconds": 1.4849736001342535,
+      "processingFps": 121.21427612162705
+    },
+    {
+      "clipId": "adl-03",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 180,
+      "durationSeconds": 6.12,
+      "poseCoverage": 1.0,
+      "maxDownwardVelocity": 0.397042667164522,
+      "maxAspectRatio": 0.7126637396892584,
+      "maxTorsoAngle": 28.853250347415358,
+      "stateTransitions": [
+        {
+          "timeMs": 3536,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.25502279693005214,
+          "isLying": false,
+          "aspectRatio": 0.5170681786626163,
+          "torsoAngle": 25.727363764188006,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 4760,
+          "from": "falling",
+          "to": "normal",
+          "velocity": 0.010274672040752763,
+          "isLying": false,
+          "aspectRatio": 0.7017577789362655,
+          "torsoAngle": 12.228387174862602,
+          "reason": "falling candidate timed out"
+        }
+      ],
+      "processingSeconds": 1.495587700046599,
+      "processingFps": 120.35402537369868
+    },
+    {
+      "clipId": "adl-04",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 150,
+      "durationSeconds": 4.65,
+      "poseCoverage": 1.0,
+      "maxDownwardVelocity": 0.1380307700044367,
+      "maxAspectRatio": 0.8150233215738553,
+      "maxTorsoAngle": 89.79198617888902,
+      "stateTransitions": [
+        {
+          "timeMs": 2387,
+          "from": "normal",
+          "to": "down",
+          "velocity": 0.0328461329142252,
+          "isLying": true,
+          "aspectRatio": 0.7271557361722347,
+          "torsoAngle": 73.26528172190022,
+          "reason": "lying posture without rapid descent"
+        },
+        {
+          "timeMs": 4402,
+          "from": "down",
+          "to": "normal",
+          "velocity": 0.0235402455893896,
+          "isLying": false,
+          "aspectRatio": 0.321976755226533,
+          "torsoAngle": 12.980726498074104,
+          "reason": "returned to normal after sustained recovery"
+        }
+      ],
+      "processingSeconds": 1.2781672000419348,
+      "processingFps": 117.35553845778449
+    },
+    {
+      "clipId": "adl-05",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 180,
+      "durationSeconds": 5.58,
+      "poseCoverage": 1.0,
+      "maxDownwardVelocity": 0.21972886977657272,
+      "maxAspectRatio": 0.8480297464423161,
+      "maxTorsoAngle": 88.36627239050432,
+      "stateTransitions": [
+        {
+          "timeMs": 3317,
+          "from": "normal",
+          "to": "down",
+          "velocity": 0.06850816870248455,
+          "isLying": true,
+          "aspectRatio": 0.753693666320088,
+          "torsoAngle": 71.76843619703592,
+          "reason": "lying posture without rapid descent"
+        },
+        {
+          "timeMs": 4991,
+          "from": "down",
+          "to": "normal",
+          "velocity": -0.0379805923790059,
+          "isLying": false,
+          "aspectRatio": 0.2886808031093344,
+          "torsoAngle": 7.461805178707752,
+          "reason": "returned to normal after sustained recovery"
+        }
+      ],
+      "processingSeconds": 1.493543499847874,
+      "processingFps": 120.51875289761163
+    },
+    {
+      "clipId": "adl-06",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 230,
+      "durationSeconds": 7.13,
+      "poseCoverage": 0.9478260869565217,
+      "maxDownwardVelocity": 0.3513854037048969,
+      "maxAspectRatio": 0.733388606794213,
+      "maxTorsoAngle": 89.95668372052882,
+      "stateTransitions": [
+        {
+          "timeMs": 403,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.3513854037048969,
+          "isLying": false,
+          "aspectRatio": 0.25290832295997556,
+          "torsoAngle": 3.1899277408285913,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 1612,
+          "from": "falling",
+          "to": "normal",
+          "velocity": 0.021918101977276318,
+          "isLying": false,
+          "aspectRatio": 0.32952853670167603,
+          "torsoAngle": 1.2912213659811365,
+          "reason": "falling candidate timed out"
+        },
+        {
+          "timeMs": 5425,
+          "from": "normal",
+          "to": "down",
+          "velocity": 0.036931422448927546,
+          "isLying": true,
+          "aspectRatio": 0.6197051351294861,
+          "torsoAngle": 76.19839978966331,
+          "reason": "lying posture without rapid descent"
+        },
+        {
+          "timeMs": 6944,
+          "from": "down",
+          "to": "normal",
+          "velocity": -0.023376172588717256,
+          "isLying": false,
+          "aspectRatio": 0.34021158505579435,
+          "torsoAngle": 3.1302741836595134,
+          "reason": "returned to normal after sustained recovery"
+        }
+      ],
+      "processingSeconds": 1.8958657998591661,
+      "processingFps": 121.31660374752553
+    },
+    {
+      "clipId": "adl-07",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 180,
+      "durationSeconds": 5.58,
+      "poseCoverage": 1.0,
+      "maxDownwardVelocity": 0.23329488692745012,
+      "maxAspectRatio": 0.5846357416091509,
+      "maxTorsoAngle": 17.170828946222706,
+      "stateTransitions": [],
+      "processingSeconds": 1.508925799978897,
+      "processingFps": 119.29015992868396
+    },
+    {
+      "clipId": "adl-08",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 180,
+      "durationSeconds": 5.58,
+      "poseCoverage": 0.9555555555555556,
+      "maxDownwardVelocity": 0.39499652001165575,
+      "maxAspectRatio": 0.6012155769196609,
+      "maxTorsoAngle": 12.4689791818031,
+      "stateTransitions": [
+        {
+          "timeMs": 279,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.39499652001165575,
+          "isLying": false,
+          "aspectRatio": 0.1866410984749904,
+          "torsoAngle": 2.8972076516138747,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 1488,
+          "from": "falling",
+          "to": "normal",
+          "velocity": -0.05440263337986428,
+          "isLying": false,
+          "aspectRatio": 0.350763789265397,
+          "torsoAngle": 6.042059854407517,
+          "reason": "falling candidate timed out"
+        }
+      ],
+      "processingSeconds": 1.4878144999966025,
+      "processingFps": 120.9828241359464
+    },
+    {
+      "clipId": "adl-09",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": null,
+      "groundContactMs": null,
+      "eventEndMs": null,
+      "latencyFromGroundMs": null,
+      "frames": 150,
+      "durationSeconds": 4.65,
+      "poseCoverage": 1.0,
+      "maxDownwardVelocity": 0.5009733220582367,
+      "maxAspectRatio": 0.7345367171592799,
+      "maxTorsoAngle": 53.20724451250399,
+      "stateTransitions": [
+        {
+          "timeMs": 3658,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.277520507894536,
+          "isLying": false,
+          "aspectRatio": 0.6912391185667917,
+          "torsoAngle": 52.44288136569875,
+          "reason": "rapid downward hip movement"
+        }
+      ],
+      "processingSeconds": 1.2619630000554025,
+      "processingFps": 118.86243890939332
+    },
+    {
+      "clipId": "adl-10",
+      "split": "tune",
+      "expectedFall": false,
+      "detectedFall": false,
+      "outcome": "TN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": 5632,
+      "groundContactMs": 6630,
+      "eventEndMs": 9968,
+      "latencyFromGroundMs": null,
+      "frames": 300,
+      "durationSeconds": 9.3,
+      "poseCoverage": 0.98,
+      "maxDownwardVelocity": 0.8569532825100769,
+      "maxAspectRatio": 1.5190364210389273,
+      "maxTorsoAngle": 78.13359771064619,
+      "stateTransitions": [
+        {
+          "timeMs": 4340,
+          "from": "normal",
+          "to": "falling",
+          "velocity": 0.3403668762535188,
+          "isLying": false,
+          "aspectRatio": 0.6738495564076592,
+          "torsoAngle": 37.12928977911252,
+          "reason": "rapid downward hip movement"
+        },
+        {
+          "timeMs": 5549,
+          "from": "falling",
+          "to": "normal",
+          "velocity": -0.020238404632896476,
+          "isLying": false,
+          "aspectRatio": 0.5792134611482028,
+          "torsoAngle": 5.948086110957626,
+          "reason": "falling candidate timed out"
+        },
+        {
+          "timeMs": 6417,
+          "from": "normal",
+          "to": "down",
+          "velocity": -0.08271063527753325,
+          "isLying": true,
+          "aspectRatio": 1.1011435271093206,
+          "torsoAngle": 36.15572425395797,
+          "reason": "lying posture without rapid descent"
+        }
+      ],
+      "processingSeconds": 2.507784599903971,
+      "processingFps": 119.62749911275782
+    }
+  ]
+}

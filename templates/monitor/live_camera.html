@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}实时监控预览 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}多路监控实时画面{% endblock %}
+
+{% block extra_css %}
+<style>
+    .camera-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    @media (max-width:1200px) {
+        .camera-container {
+            grid-template-columns: 1fr;
+        }
+    }
+    .camera-card {
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+    }
+    .camera-title {
+        color: #fff;
+        padding: 6px 12px;
+        background: rgba(0,0,0,0.6);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+    .video-box {
+        width: 100%;
+        height: 260px;
+        object-fit: contain;
+    }
+    .control-panel {
+        background: #fff;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .btn-control {
+        margin: 0 6px;
+    }
+    .draw-tip {
+        color: var(--primary);
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 顶部控制工具栏 -->
+<div class="control-panel">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h5 class="mb-3">AI识别开关</h5>
+            <div class="form-check form-switch d-inline-block me-4">
+                <input class="form-check-input" type="checkbox" id="fallSwitch" checked>
+                <label class="form-check-label" for="fallSwitch">摔倒检测</label>
+            </div>
+            <div class="form-check form-switch d-inline-block me-4">
+                <input class="form-check-input" type="checkbox" id="strangerSwitch" checked>
+                <label class="form-check-label" for="strangerSwitch">陌生人识别</label>
+            </div>
+            <div class="form-check form-switch d-inline-block me-4">
+                <input class="form-check-input" type="checkbox" id="dangerSwitch" checked>
+                <label class="form-check-label" for="dangerSwitch">危险区判定</label>
+            </div>
+            <div class="form-check form-switch d-inline-block">
+                <input class="form-check-input" type="checkbox" id="emotionSwitch" checked>
+                <label class="form-check-label" for="emotionSwitch">情感分析</label>
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            <span class="draw-tip me-3">💡 按住鼠标拖拽可绘制危险区域</span>
+            <button class="btn btn-primary btn-control" id="startDraw">开启绘制模式</button>
+            <button class="btn btn-outline-danger btn-control" id="clearDraw">清空危险区</button>
+            <button class="btn btn-success btn-control" id="saveZone">保存区域配置</button>
+        </div>
+    </div>
+</div>
+
+<!-- 多路摄像头分屏区域 -->
+<div class="camera-container">
+    <!-- 摄像头1 卧室 -->
+    <div class="camera-card">
+        <div class="camera-title">一号卧室摄像头 cam001</div>
+        <canvas id="cam001" class="video-box"></canvas>
+    </div>
+    <!-- 摄像头2 厨房 -->
+    <div class="camera-card">
+        <div class="camera-title">厨房危险区摄像头 cam002</div>
+        <canvas id="cam002" class="video-box"></canvas>
+    </div>
+    <!-- 摄像头3 走廊 -->
+    <div class="camera-card">
+        <div class="camera-title">一楼走廊 cam003</div>
+        <canvas id="cam003" class="video-box"></canvas>
+    </div>
+    <!-- 摄像头4 楼梯口 -->
+    <div class="camera-card">
+        <div class="camera-title">楼梯危险区域 cam004</div>
+        <canvas id="cam004" class="video-box"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/video_render.js') }}"></script>
+<script>
+    // 危险区绘制交互逻辑
+    const startDrawBtn = document.getElementById('startDraw');
+    const clearDrawBtn = document.getElementById('clearDraw');
+    const saveZoneBtn = document.getElementById('saveZone');
+    let drawMode = false;
+
+    startDrawBtn.addEventListener('click', () => {
+        drawMode = !drawMode;
+        if(drawMode) {
+            startDrawBtn.innerText = "关闭绘制模式";
+            startDrawBtn.classList.remove('btn-primary');
+            startDrawBtn.classList.add('btn-warning');
+            alert("已开启绘制，在画面拖拽矩形划定危险区域");
+        } else {
+            startDrawBtn.innerText = "开启绘制模式";
+            startDrawBtn.classList.remove('btn-warning');
+            startDrawBtn.classList.add('btn-primary');
+        }
+    })
+
+    clearDrawBtn.addEventListener('click', () => {
+        if(confirm("确定清空当前所有危险区域？")) {
+            // 后续对接后端清空接口
+            alert("危险区已清空");
+        }
+    })
+
+    saveZoneBtn.addEventListener('click', () => {
+        // 后续对接保存接口
+        alert("危险区域配置保存成功");
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}腰间北斗智能监护系统 - 智慧养老预警系统{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+{% if session.user %}
+  <div class="layout-container">
+    <!-- 左侧侧边导航栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">腰间北斗智能监护系统</div>
+      <nav class="sidebar-menu">
+        {% if session.role == 'admin' %}
+          <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">总监控看板</a>
+          <a href="/monitor/live" class="{% if '/monitor' in request.path %}active{% endif %}">实时监控预览</a>
+          <a href="/alert/real" class="{% if '/alert' in request.path %}active{% endif %}">告警事件管理</a>
+          <a href="/person/list" class="{% if '/person' in request.path %}active{% endif %}">人员人脸库</a>
+          <a href="/analysis/emotion" class="{% if '/analysis' in request.path %}active{% endif %}">数据统计报表</a>
+          <a href="/setting/danger" class="{% if '/setting' in request.path %}active{% endif %}">系统配置</a>
+        {% endif %}
+        {% if session.role == 'family' %}
+          <a href="/family/index" class="{% if request.path == '/family/index' %}active{% endif %}">老人首页</a>
+          <a href="/family/alert" class="{% if '/family/alert' in request.path %}active{% endif %}">告警记录</a>
+        {% endif %}
+      </nav>
+    </aside>
+
+    <!-- 中间主内容区 -->
+    <div class="main-content">
+      <header class="top-header">
+        <div>
+          <h5 class="mb-0">{% block page_name %}首页总览{% endblock %}</h5>
+        </div>
+        <div>
+          <span class="me-4">欢迎，{{ session.username }}
+            {% if session.role == 'admin' %}【管理员】{% else %}【家属】{% endif %}
+          </span>
+          <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#userModal">个人中心</button>
+          <a href="/logout" class="btn btn-outline-danger btn-sm ms-2">退出登录</a>
+        </div>
+      </header>
+
+      <div class="page-body">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+
+    {% if session.role == 'admin' %}
+    <div class="alert-sidebar">
+      <h5 class="mb-3">实时告警消息</h5>
+      <div id="alertList">
+        <div class="text-secondary">暂无新告警事件</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- 个人中心弹窗 -->
+  <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">个人中心设置</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">当前账号</label>
+            <input class="form-control" value="{{ session.username }}" disabled>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">修改密码</label>
+            <input type="password" class="form-control" placeholder="输入新密码">
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="pushSwitch" checked>
+            <label class="form-check-label" for="pushSwitch">开启浏览器告警推送通知</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+          <button class="btn btn-primary">保存修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/socket_base.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+
+{% else %}
+  <script>window.location.href = "/login"</script>
+{% endif %}
+</body>
+</html>

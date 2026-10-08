@@ -1,0 +1,3 @@
+﻿clipId,split,expectedFall,detectedFall,outcome,duplicateEvents,eventStartMs,groundContactMs,eventEndMs,latencyFromGroundMs,frames,durationSeconds,poseCoverage,maxDownwardVelocity,maxAspectRatio,maxTorsoAngle,processingSeconds,processingFps,predictionTimesMs
+fall-01,tune,True,False,FN,0,2736,3737,5305,,160,5.279999999999999,0.71875,0.9124919621631347,1.7352280853614166,70.59900062205999,3.794514900073409,42.1661277432076,[]
+fall-02,tune,True,True,TP,0,1301,2302,3637,701,110,3.63,0.7363636363636363,0.6730831030643345,2.7541902043936384,89.39492050625495,0.9839538999367505,111.79385539004511,[3003]

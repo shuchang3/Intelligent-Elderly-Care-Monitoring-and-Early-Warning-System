@@ -1,0 +1,16 @@
+model:
+  path: yolov8n-pose.pt
+  confidence: 0.55
+preprocessing:
+  roi: null
+fall_detector:
+  min_keypoint_confidence: 0.3
+  downward_velocity_threshold: 0.25
+  lying_aspect_ratio: 1.05
+  horizontal_torso_angle_deg: 70.0
+  minimum_bbox_bottom_normalized: 0.9
+  velocity_window: 5
+  falling_timeout_seconds: 1.2
+  down_confirmation_seconds: 0.5
+  recovery_seconds: 0.8
+  missing_tolerance_seconds: 0.5

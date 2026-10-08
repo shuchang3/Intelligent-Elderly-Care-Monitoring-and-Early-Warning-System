@@ -1,0 +1,10 @@
+{% extends 'appbase.html' %}
+{% block content %}
+{% if request.path == '/person/list' %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3"><div id="personTabs" class="person-tabs"><button class="active" data-type="all">全部人员</button><button data-type="ELDER">老年人</button><button data-type="WORKER">义工/护理</button><button data-type="FAMILY">家属</button></div>{% if session.role == 'ADMIN' %}<a href="/person/upload" class="btn btn-primary">新增人员人脸</a>{% endif %}</div>
+<div id="personWrap" class="row g-4"></div>
+{% else %}
+<a href="/person/list" class="btn btn-outline-secondary mb-4">← 返回人员列表</a>
+<div class="row g-4"><div class="col-lg-6"><section class="chart-card"><h5 class="mb-4">人员基础信息</h5><form id="personUploadForm"><div class="mb-3"><label class="form-label">人员编号</label><input class="form-control" name="personCode" required maxlength="64"></div><div class="mb-3"><label class="form-label">姓名</label><input class="form-control" name="name" required maxlength="100"></div><div class="mb-3"><label class="form-label">人员类型</label><select class="form-select" name="personType"><option value="ELDER">老年人</option><option value="WORKER">护理义工</option><option value="FAMILY">老人家属</option></select></div><div class="mb-3"><label class="form-label">备注（房间/负责区域）</label><textarea class="form-control" name="note" rows="2" maxlength="500"></textarea></div><div id="uploadArea" class="upload-box"><p id="uploadText">点击或拖拽图片到此上传</p><img id="previewImg" class="preview-img" alt="人脸照片预览"><input id="faceFile" type="file" hidden accept="image/jpeg,image/png"></div><button id="savePerson" class="btn btn-primary w-100" type="submit">保存入库</button></form></section></div><div class="col-lg-6"><section class="chart-card"><h5>照片处理状态</h5><div class="face-process"><div>1</div><p><strong>上传照片</strong><br><span>仅支持清晰的JPEG或PNG单人照片</span></p><div>2</div><p><strong>算法编码</strong><br><span>页面显示“处理中”时尚未正式生效</span></p><div>3</div><p><strong>确认生效</strong><br><span>算法确认有效人脸后状态变为“已生效”</span></p></div><p class="alert alert-info mb-0">不会伪造原版的“三模型识别效果图”；这里只展示真实处理流程和结果。</p></section></div></div>
+{% endif %}
+{% endblock %}

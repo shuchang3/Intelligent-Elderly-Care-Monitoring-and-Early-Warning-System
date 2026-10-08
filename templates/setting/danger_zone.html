@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}系统配置 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}危险区域与预警阈值配置{% endblock %}
+
+{% block extra_css %}
+<style>
+    .config-card{
+        background:#fff;
+        border-radius:8px;
+        padding:20px;
+        margin-bottom:20px;
+    }
+    .camera-item{
+        border:1px solid #e6e6e6;
+        border-radius:6px;
+        padding:12px;
+        margin-bottom:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+    .range-wrap{
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
+    input[type="range"]{
+        flex-grow:1;
+    }
+    .value-num{
+        width:45px;
+        text-align:center;
+        font-weight:bold;
+        color:var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="config-card">
+    <h5 class="mb-4">摄像头危险区域配置</h5>
+    <p class="text-secondary mb-4">前往【实时监控预览】画面拖拽绘制危险区域，在此统一管理各摄像头区域开关</p>
+
+    <div class="camera-item">
+        <div>
+            <h6>cam001 一号卧室摄像头</h6>
+            <span class="text-secondary">已配置1处危险区域</span>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-primary me-2">编辑区域</button>
+            <button class="btn btn-sm btn-outline-danger">清空区域</button>
+        </div>
+    </div>
+    <div class="camera-item">
+        <div>
+            <h6>cam002 厨房摄像头</h6>
+            <span class="text-secondary">已配置2处危险区域</span>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-primary me-2">编辑区域</button>
+            <button class="btn btn-sm btn-outline-danger">清空区域</button>
+        </div>
+    </div>
+    <div class="camera-item">
+        <div>
+            <h6>cam003 一楼走廊</h6>
+            <span class="text-secondary">暂无危险区域</span>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-primary">前往监控绘制</button>
+        </div>
+    </div>
+    <div class="camera-item">
+        <div>
+            <h6>cam004 楼梯口摄像头</h6>
+            <span class="text-secondary">已配置1处危险区域</span>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-primary me-2">编辑区域</button>
+            <button class="btn btn-sm btn-outline-danger">清空区域</button>
+        </div>
+    </div>
+</div>
+
+<div class="config-card">
+    <h5 class="mb-4">AI预警灵敏度阈值设置</h5>
+    <div class="mb-4">
+        <label class="form-label">摔倒检测置信阈值</label>
+        <div class="range-wrap">
+            <input type="range" min="30" max="90" value="65" id="fallRange">
+            <span class="value-num" id="fallVal">65</span>
+        </div>
+        <div class="form-text">数值越高要求识别可信度越高，告警越少；数值越低更容易触发告警（更容易误报）</div>
+    </div>
+    <div class="mb-4">
+        <label class="form-label">陌生人识别阈值</label>
+        <div class="range-wrap">
+            <input type="range" min="30" max="90" value="60" id="strangeRange">
+            <span class="value-num" id="strangeVal">60</span>
+        </div>
+        <div class="form-text">区分院内人员与外来陌生人</div>
+    </div>
+    <div class="mb-4">
+        <label class="form-label">负面情绪预警阈值</label>
+        <div class="range-wrap">
+            <input type="range" min="30" max="90" value="55" id="emotionRange">
+            <span class="value-num" id="emotionVal">55</span>
+        </div>
+        <div class="form-text">连续多帧判定低落才触发预警</div>
+    </div>
+
+    <div class="mt-4">
+        <button class="btn btn-primary" id="saveConfig">保存全部配置</button>
+        <button class="btn btn-outline-secondary ms-3">恢复默认阈值</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 滑块实时显示数值
+const fallRange = document.getElementById("fallRange");
+const fallVal = document.getElementById("fallVal");
+fallRange.oninput = ()=> fallVal.innerText = fallRange.value;
+
+const strangeRange = document.getElementById("strangeRange");
+const strangeVal = document.getElementById("strangeVal");
+strangeRange.oninput = ()=> strangeVal.innerText = strangeRange.value;
+
+const emotionRange = document.getElementById("emotionRange");
+const emotionVal = document.getElementById("emotionVal");
+emotionRange.oninput = ()=> emotionVal.innerText = emotionRange.value;
+
+// 保存按钮模拟
+document.getElementById("saveConfig").onclick = function(){
+    alert("参数配置保存成功！新阈值将立即生效");
+}
+</script>
+{% endblock %}

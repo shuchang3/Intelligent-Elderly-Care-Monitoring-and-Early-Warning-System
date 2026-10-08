@@ -1,0 +1,427 @@
+{% extends "appbase.html" %}
+
+{% block title %}电子围栏管理 - 腰间北斗智能监护系统{% endblock %}
+
+{% block extra_css %}
+<style>
+  .fence-page { --fence-ink:#172b4d; --fence-muted:#6b7b91; --fence-line:#e5ebf2; }
+  .fence-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:18px; margin-bottom:20px; }
+  .fence-heading h2 { margin:0 0 5px; color:var(--fence-ink); font-size:22px; font-weight:700; }
+  .fence-heading p { margin:0; color:var(--fence-muted); font-size:14px; }
+  .fence-heading-actions { display:flex; gap:9px; flex-wrap:wrap; }
+  .fence-workspace { display:grid; grid-template-columns:minmax(0,1fr) 350px; gap:18px; align-items:stretch; }
+  .fence-map-card,.fence-side-card { background:#fff; border:1px solid var(--fence-line); border-radius:12px; box-shadow:0 5px 18px rgba(20,48,78,.045); }
+  .fence-map-card { min-width:0; overflow:hidden; }
+  .fence-map-toolbar { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:15px 18px; border-bottom:1px solid var(--fence-line); }
+  .fence-map-toolbar strong { color:var(--fence-ink); font-size:15px; }
+  .fence-map-toolbar span { color:var(--fence-muted); font-size:12px; }
+  .fence-map-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  #map { height:min(70vh,700px); min-height:440px; background:#edf3f8; }
+  .fence-map-legend { display:flex; gap:18px; flex-wrap:wrap; padding:12px 18px; color:var(--fence-muted); font-size:12px; border-top:1px solid var(--fence-line); }
+  .fence-legend-dot { display:inline-block; width:9px; height:9px; margin-right:6px; border-radius:50%; background:#3678e5; }
+  .fence-legend-dot.selected { background:#15a67a; }.fence-legend-dot.person { background:#ff8c42; }
+  .fence-side { display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .fence-side-card { padding:17px; }
+  .fence-card-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:13px; }
+  .fence-card-heading h3 { margin:0; color:var(--fence-ink); font-size:15px; font-weight:700; }
+  .fence-count { min-width:25px; padding:3px 8px; color:#42658d; background:#edf4fb; border-radius:20px; text-align:center; font-size:12px; }
+  .fence-list { display:flex; flex-direction:column; gap:8px; max-height:230px; overflow:auto; }
+  .fence-list-empty { padding:18px 10px; color:var(--fence-muted); background:#f7f9fc; border:1px dashed #d8e1eb; border-radius:8px; text-align:center; font-size:13px; }
+  .fence-list-item { display:flex; align-items:center; gap:10px; width:100%; padding:10px; color:var(--fence-ink); background:#fff; border:1px solid var(--fence-line); border-radius:8px; text-align:left; }
+  .fence-list-item:hover { border-color:#9bb9e8; background:#f8fbff; }
+  .fence-list-item.active { border-color:#2e7be8; background:#f1f7ff; box-shadow:inset 3px 0 #2e7be8; }
+  .fence-list-icon { display:grid; place-items:center; flex:0 0 32px; width:32px; height:32px; color:#2674d9; background:#e9f2ff; border-radius:8px; font-size:14px; }
+  .fence-list-copy { flex:1; min-width:0; }.fence-list-copy strong,.fence-list-copy small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .fence-list-copy strong { font-size:13px; }.fence-list-copy small { margin-top:3px; color:var(--fence-muted); font-size:11px; }
+  .fence-state { padding:3px 7px; color:#16815f; background:#e7f7f0; border-radius:20px; font-size:10px; white-space:nowrap; }
+  .fence-state.off { color:#788699; background:#eef1f5; }
+  .fence-form { display:grid; gap:12px; }
+  .fence-form label { display:block; margin-bottom:5px; color:#52657d; font-size:12px; font-weight:600; }
+  .fence-form .form-control,.fence-form .form-select { min-height:39px; border-color:#dce4ee; border-radius:7px; font-size:13px; }
+  .fence-field-readonly { padding:9px 10px; color:#536980; background:#f6f8fb; border:1px solid #e5ebf2; border-radius:7px; font-size:12px; overflow-wrap:anywhere; }
+  .fence-draw-note { padding:10px 11px; color:#53708f; background:#f1f7ff; border-radius:8px; font-size:12px; line-height:1.5; }
+  .fence-draw-note.is-drawing { color:#176c52; background:#eaf8f2; }
+  .fence-form-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .fence-form-actions .btn { flex:1; min-width:105px; }
+  .fence-location { margin-top:auto; }
+  .fence-location-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .fence-location-cell { min-width:0; padding:10px; background:#f7f9fc; border-radius:8px; }
+  .fence-location-cell span,.fence-location-cell strong { display:block; }
+  .fence-location-cell span { color:var(--fence-muted); font-size:10px; }
+  .fence-location-cell strong { margin-top:4px; color:var(--fence-ink); font-size:12px; overflow-wrap:anywhere; }
+  .fence-location-foot { margin:10px 0 0; color:var(--fence-muted); font-size:11px; }
+  @media(max-width:1100px) { .fence-workspace { grid-template-columns:minmax(0,1fr) 310px; gap:12px; } .fence-side-card { padding:14px; } }
+  @media(max-width:850px) { .fence-workspace { grid-template-columns:1fr; } .fence-side { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; } .fence-location { margin-top:0; } #map { height:55vh; min-height:360px; } }
+  @media(max-width:560px) { .fence-heading { align-items:flex-start; flex-direction:column; } .fence-heading-actions { width:100%; } .fence-map-toolbar { align-items:flex-start; flex-direction:column; } .fence-side { grid-template-columns:1fr; } #map { min-height:320px; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="fence-page">
+  <section class="fence-heading">
+    <div>
+      <h2>电子围栏</h2>
+      <p>在地图上绘制监护区域，配置区域名称与启用状态。</p>
+    </div>
+    <div class="fence-heading-actions">
+      <button class="btn btn-outline-primary btn-sm" type="button" onclick="loadGeofences()">刷新数据</button>
+      {% if session.role == 'ADMIN' %}
+      <button class="btn btn-primary btn-sm" type="button" onclick="createFence()">＋ 新建区域</button>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="fence-workspace">
+    <div class="fence-map-card">
+      <div class="fence-map-toolbar">
+        <div><strong>区域地图</strong><br><span id="mapHint">选择一个区域查看边界，或新建区域开始绘制</span></div>
+        <div class="fence-map-actions">
+          <button class="btn btn-outline-secondary btn-sm" id="cancelDrawing" type="button" onclick="cancelDrawing()" hidden>取消绘制</button>
+          <button class="btn btn-success btn-sm" id="finishDrawing" type="button" onclick="finishDrawing()" disabled hidden>完成绘制（0/3）</button>
+        </div>
+      </div>
+      <div id="map" role="application" aria-label="电子围栏地图"></div>
+      <div class="fence-map-legend"><span><i class="fence-legend-dot selected"></i>当前选中区域</span><span><i class="fence-legend-dot"></i>其他启用区域</span><span><i class="fence-legend-dot person"></i>老人当前位置</span></div>
+    </div>
+
+    <aside class="fence-side">
+      <section class="fence-side-card">
+        <div class="fence-card-heading"><h3>区域列表</h3><span id="fenceCount" class="fence-count">0</span></div>
+        <div id="fenceList" class="fence-list"><div class="fence-list-empty">正在加载区域…</div></div>
+      </section>
+
+      <section class="fence-side-card">
+        <div class="fence-card-heading"><h3 id="formHeading">区域配置</h3><span id="fenceMode" class="fence-count">未选择</span></div>
+        <form id="fenceForm" class="fence-form" onsubmit="saveFence(event)">
+          <div><label for="fenceCode">区域编号</label><input id="fenceCode" class="form-control" maxlength="64" required {% if session.role != 'ADMIN' %}readonly{% endif %}></div>
+          <div><label for="fenceName">区域名称</label><input id="fenceName" class="form-control" maxlength="100" placeholder="例如：院区安全范围" required {% if session.role != 'ADMIN' %}readonly{% endif %}></div>
+          <div><label for="fenceEnabled">区域状态</label><select id="fenceEnabled" class="form-select" {% if session.role != 'ADMIN' %}disabled{% endif %}><option value="true">启用监护</option><option value="false">停用监护</option></select></div>
+          <div><label>边界点</label><div id="pointSummary" class="fence-field-readonly">尚未绘制边界</div></div>
+          <div id="drawNote" class="fence-draw-note">新建区域后，在地图上依次点击至少 3 个点，再点“完成绘制”。</div>
+          <div class="fence-form-actions">
+            {% if session.role == 'ADMIN' %}
+            <button id="redrawButton" class="btn btn-outline-primary btn-sm" type="button" onclick="redrawBoundary()" hidden>重新绘制边界</button>
+            <button id="saveButton" class="btn btn-primary btn-sm" type="submit" disabled>保存区域</button>
+            {% endif %}
+          </div>
+          {% if session.role == 'ADMIN' %}
+          <button id="disableButton" class="btn btn-link btn-sm text-danger p-0 text-start" type="button" onclick="disableFence()" hidden>停用此区域</button>
+          {% else %}<p class="fence-location-foot mb-0">护理人员可查看区域配置；修改操作由管理员完成。</p>{% endif %}
+        </form>
+      </section>
+
+      <section class="fence-side-card fence-location">
+        <div class="fence-card-heading"><h3>老人当前位置</h3><button class="btn btn-link btn-sm p-0" type="button" onclick="loadLastLocation()">刷新</button></div>
+        <div id="locationInfo" class="fence-location-grid"><div class="fence-list-empty" style="grid-column:1/-1">{% if session.role == 'ADMIN' %}暂无位置数据{% else %}当前位置仅管理员可查看{% endif %}</div></div>
+        <p id="locationTime" class="fence-location-foot">位置数据尚未更新</p>
+      </section>
+    </aside>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://api.map.baidu.com/api?v=3.0&ak=rfIhXTJVqsz1nOxN1nqeKNf6cjF04vaR"></script>
+<script>
+'use strict';
+let map = null;
+const canManageFences = {{ (session.role == 'ADMIN')|tojson }};
+let geofences = [];
+let selectedFenceCode = null;
+let boundaryPoints = [];
+let drawing = false;
+let fenceOverlays = [];
+let drawingOverlays = [];
+let personMarker = null;
+let locationTimer = null;
+
+function parsePoints(fence) {
+  try { return typeof fence.pointsJson === 'string' ? JSON.parse(fence.pointsJson) : fence.pointsJson || []; }
+  catch (_) { return []; }
+}
+
+function initMap() {
+  if (typeof BMap === 'undefined') {
+    document.getElementById('map').innerHTML = '<div class="alert alert-warning m-3">地图加载失败，请检查网络和地图密钥配置。</div>';
+    document.getElementById('mapHint').textContent = '地图服务暂不可用';
+    return;
+  }
+  map = new BMap.Map('map');
+  map.centerAndZoom(new BMap.Point(116.404, 39.915), 12);
+  map.enableScrollWheelZoom();
+  map.addControl(new BMap.NavigationControl());
+  map.addControl(new BMap.ScaleControl());
+  map.addEventListener('click', event => { if (drawing) addDrawingPoint(event.point); });
+  loadGeofences();
+  loadLastLocation();
+  locationTimer = setInterval(loadLastLocation, 30000);
+}
+
+async function loadGeofences() {
+  await ui.run(async () => {
+    const current = selectedFenceCode;
+    geofences = await api('geofences');
+    renderFenceList();
+    renderFencesOnMap();
+    if (current && geofences.some(fence => fence.fenceCode === current)) selectFence(current, false);
+    else if (selectedFenceCode && !geofences.some(fence => fence.fenceCode === selectedFenceCode)) clearSelection();
+    document.getElementById('fenceCount').textContent = String(geofences.length);
+  });
+}
+
+function renderFenceList() {
+  const list = document.getElementById('fenceList');
+  list.replaceChildren();
+  if (!geofences.length) {
+    list.innerHTML = '<div class="fence-list-empty">暂无电子围栏<br>新建区域并绘制边界后会显示在这里</div>';
+    return;
+  }
+  geofences.forEach(fence => {
+    const points = parsePoints(fence);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `fence-list-item${fence.fenceCode === selectedFenceCode ? ' active' : ''}`;
+    button.onclick = () => selectFence(fence.fenceCode, true);
+    const icon = document.createElement('span'); icon.className = 'fence-list-icon'; icon.textContent = '⌖';
+    const copy = document.createElement('span'); copy.className = 'fence-list-copy';
+    const name = document.createElement('strong'); name.textContent = fence.fenceName;
+    const meta = document.createElement('small'); meta.textContent = `${fence.fenceCode} · ${points.length} 个边界点`;
+    copy.append(name, meta);
+    const state = document.createElement('span'); state.className = `fence-state${fence.enabled ? '' : ' off'}`; state.textContent = fence.enabled ? '监护中' : '已停用';
+    button.append(icon, copy, state); list.append(button);
+  });
+}
+
+function renderFencesOnMap() {
+  if (!map) return;
+  fenceOverlays.forEach(overlay => map.removeOverlay(overlay));
+  fenceOverlays = [];
+  geofences.forEach(fence => {
+    const points = parsePoints(fence);
+    if (points.length < 3) return;
+    const selected = fence.fenceCode === selectedFenceCode;
+    const enabled = fence.enabled !== false;
+    const polygon = new BMap.Polygon(points.map(point => new BMap.Point(Number(point[0]), Number(point[1]))), {
+      strokeColor: !enabled ? '#8b99aa' : selected ? '#15a67a' : '#3678e5', strokeWeight: selected ? 3 : 2,
+      strokeOpacity: .95, fillColor: !enabled ? '#8b99aa' : selected ? '#15a67a' : '#3678e5', fillOpacity: !enabled ? .06 : selected ? .22 : .11,
+      strokeStyle: enabled ? 'solid' : 'dashed'
+    });
+    map.addOverlay(polygon); fenceOverlays.push(polygon);
+  });
+  if (drawing && boundaryPoints.length >= 3) drawPreview();
+}
+
+function selectFence(code, centerMap = true) {
+  if (drawing) cancelDrawing();
+  const fence = geofences.find(item => item.fenceCode === code);
+  if (!fence) return;
+  selectedFenceCode = code;
+  boundaryPoints = parsePoints(fence).map(point => [Number(point[0]), Number(point[1])]);
+  document.getElementById('fenceCode').value = fence.fenceCode;
+  document.getElementById('fenceCode').readOnly = true;
+  document.getElementById('fenceName').value = fence.fenceName;
+  document.getElementById('fenceEnabled').value = String(fence.enabled);
+  document.getElementById('formHeading').textContent = '区域配置';
+  document.getElementById('fenceMode').textContent = '编辑区域';
+  const saveButton = document.getElementById('saveButton');
+  const disableButton = document.getElementById('disableButton');
+  const redrawButton = document.getElementById('redrawButton');
+  if (saveButton) saveButton.disabled = false;
+  if (disableButton) disableButton.hidden = !fence.enabled;
+  if (redrawButton) redrawButton.hidden = false;
+  updatePointSummary();
+  document.getElementById('drawNote').textContent = '可修改名称和监护状态；需要调整边界时，点击“重新绘制边界”并在地图上重新圈定。';
+  renderFenceList(); renderFencesOnMap();
+  document.getElementById('mapHint').textContent = `${fence.fenceName} · ${boundaryPoints.length} 个边界点`;
+  if (centerMap && map && boundaryPoints.length) map.setViewport(boundaryPoints.map(point => new BMap.Point(point[0], point[1])));
+}
+
+function createFence() {
+  if (!canManageFences) return;
+  if (drawing) cancelDrawing();
+  selectedFenceCode = null; boundaryPoints = [];
+  document.getElementById('fenceCode').readOnly = false;
+  document.getElementById('fenceCode').value = `FENCE-${Date.now()}`;
+  document.getElementById('fenceName').value = '';
+  document.getElementById('fenceEnabled').value = 'true';
+  document.getElementById('formHeading').textContent = '新建区域';
+  document.getElementById('fenceMode').textContent = '待绘制';
+  const saveButton = document.getElementById('saveButton');
+  const disableButton = document.getElementById('disableButton');
+  const redrawButton = document.getElementById('redrawButton');
+  if (saveButton) saveButton.disabled = true;
+  if (disableButton) disableButton.hidden = true;
+  if (redrawButton) redrawButton.hidden = true;
+  document.getElementById('drawNote').textContent = '请在地图上依次点击至少 3 个点，再点击地图上方的“完成绘制”。';
+  updatePointSummary(); renderFenceList(); renderFencesOnMap(); startDrawing();
+  document.getElementById('fenceName').focus();
+}
+
+function redrawBoundary() {
+  if (!selectedFenceCode) return createFence();
+  boundaryPoints = [];
+  startDrawing();
+  document.getElementById('drawNote').textContent = '重新绘制会替换原边界；在地图上依次点击至少 3 个点，再点击“完成绘制”。';
+}
+
+function startDrawing() {
+  if (!map) { ui.error(new Error('地图尚未加载，暂时无法绘制区域')); return; }
+  clearDrawingOverlays(); drawing = true;
+  document.getElementById('finishDrawing').hidden = false;
+  document.getElementById('cancelDrawing').hidden = false;
+  document.getElementById('finishDrawing').disabled = true;
+  document.getElementById('mapHint').textContent = '绘制中：点击地图添加边界点';
+  document.getElementById('drawNote').classList.add('is-drawing');
+  updateDrawingControls(); renderFencesOnMap();
+}
+
+function addDrawingPoint(point) {
+  boundaryPoints.push([point.lng, point.lat]);
+  const marker = new BMap.Marker(point); map.addOverlay(marker); drawingOverlays.push(marker);
+  if (boundaryPoints.length >= 3) drawPreview();
+  updatePointSummary(); updateDrawingControls();
+}
+
+function drawPreview() {
+  if (!map || boundaryPoints.length < 3) return;
+  const previous = drawingOverlays.find(item => item.__fencePreview);
+  if (previous) map.removeOverlay(previous);
+  const polygon = new BMap.Polygon(boundaryPoints.map(point => new BMap.Point(point[0], point[1])), {
+    strokeColor:'#15a67a', strokeWeight:3, strokeOpacity:1, fillColor:'#15a67a', fillOpacity:.24
+  });
+  polygon.__fencePreview = true; map.addOverlay(polygon); drawingOverlays.push(polygon);
+}
+
+function updateDrawingControls() {
+  const count = boundaryPoints.length;
+  document.getElementById('finishDrawing').textContent = `完成绘制（${count}/3）`;
+  document.getElementById('finishDrawing').disabled = count < 3;
+  document.getElementById('pointSummary').textContent = count ? `已添加 ${count} 个边界点` : '尚未绘制边界';
+}
+
+function updatePointSummary() {
+  const summary = document.getElementById('pointSummary');
+  if (drawing) return updateDrawingControls();
+  summary.textContent = boundaryPoints.length ? `${boundaryPoints.length} 个边界点 · 多边形区域` : '尚未绘制边界';
+}
+
+function clearDrawingOverlays() {
+  drawingOverlays.forEach(overlay => map && map.removeOverlay(overlay)); drawingOverlays = [];
+}
+
+function finishDrawing() {
+  if (boundaryPoints.length < 3) return;
+  drawing = false;
+  document.getElementById('finishDrawing').hidden = true;
+  document.getElementById('cancelDrawing').hidden = true;
+  document.getElementById('drawNote').classList.remove('is-drawing');
+  document.getElementById('drawNote').textContent = '边界已绘制。确认名称和状态后保存区域配置。';
+  document.getElementById('fenceMode').textContent = '边界已就绪';
+  const saveButton = document.getElementById('saveButton');
+  const disableButton = document.getElementById('disableButton');
+  if (saveButton) saveButton.disabled = false;
+  if (disableButton) disableButton.hidden = true;
+  document.getElementById('pointSummary').textContent = `${boundaryPoints.length} 个边界点 · 多边形区域`;
+  document.getElementById('mapHint').textContent = `边界已绘制 · ${boundaryPoints.length} 个点`;
+}
+
+function cancelDrawing() {
+  drawing = false; boundaryPoints = [];
+  document.getElementById('finishDrawing').hidden = true;
+  document.getElementById('cancelDrawing').hidden = true;
+  document.getElementById('drawNote').classList.remove('is-drawing');
+  clearDrawingOverlays();
+  if (selectedFenceCode) selectFence(selectedFenceCode, false);
+  else {
+    document.getElementById('fenceMode').textContent = '待绘制';
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) saveButton.disabled = true;
+    document.getElementById('pointSummary').textContent = '尚未绘制边界';
+    document.getElementById('mapHint').textContent = '选择一个区域查看边界，或新建区域开始绘制';
+    renderFencesOnMap();
+  }
+}
+
+async function saveFence(event) {
+  event.preventDefault();
+  if (!canManageFences) return;
+  await ui.run(async () => {
+    const fenceCode = document.getElementById('fenceCode').value.trim();
+    const fenceName = document.getElementById('fenceName').value.trim();
+    if (!fenceCode || !fenceName) throw new Error('请填写区域编号和名称');
+    if (boundaryPoints.length < 3) throw new Error('请先在地图上绘制至少 3 个边界点');
+    const editing = Boolean(selectedFenceCode);
+    const body = { fenceCode, fenceName, enabled: document.getElementById('fenceEnabled').value === 'true', points: boundaryPoints };
+    await api(editing ? `geofences/${encodeURIComponent(selectedFenceCode)}` : 'geofences', { method: editing ? 'PUT' : 'POST', body });
+    const savedCode = fenceCode;
+    clearDrawingOverlays();
+    await loadGeofences();
+    selectFence(savedCode, true);
+    document.getElementById('drawNote').textContent = '区域配置已保存。围栏边界会用于后续位置判定。';
+  });
+}
+
+async function disableFence() {
+  if (!canManageFences) return;
+  const fence = geofences.find(item => item.fenceCode === selectedFenceCode);
+  if (!fence || !confirm(`确定停用“${fence.fenceName}”吗？`)) return;
+  await ui.run(async () => {
+    await api(`geofences/${encodeURIComponent(fence.fenceCode)}`, { method:'DELETE' });
+    selectedFenceCode = null; boundaryPoints = [];
+    await loadGeofences(); clearSelection();
+  });
+}
+
+function clearSelection() {
+  selectedFenceCode = null; boundaryPoints = [];
+  document.getElementById('fenceForm').reset();
+  document.getElementById('fenceCode').readOnly = false;
+  document.getElementById('formHeading').textContent = '区域配置';
+  document.getElementById('fenceMode').textContent = '未选择';
+  document.getElementById('pointSummary').textContent = '尚未绘制边界';
+  document.getElementById('drawNote').textContent = '新建区域后，在地图上依次点击至少 3 个点，再点“完成绘制”。';
+  const saveButton = document.getElementById('saveButton');
+  const disableButton = document.getElementById('disableButton');
+  const redrawButton = document.getElementById('redrawButton');
+  if (saveButton) saveButton.disabled = true;
+  if (disableButton) disableButton.hidden = true;
+  if (redrawButton) redrawButton.hidden = true;
+  renderFenceList(); renderFencesOnMap();
+}
+
+async function loadLastLocation() {
+  if (!canManageFences) return;
+  await ui.run(async () => {
+    const bindings = await api('person-device-bindings');
+    const binding = bindings.find(item => item.enabled !== false);
+    if (!binding) return;
+    const personCode = binding.personCode || binding.person_code;
+    const location = await api(`location/last-known/${encodeURIComponent(personCode)}`);
+    renderLocationInfo(location);
+    if (map && Number.isFinite(Number(location.longitude)) && Number.isFinite(Number(location.latitude))) {
+      const point = new BMap.Point(Number(location.longitude), Number(location.latitude));
+      if (!personMarker) { personMarker = new BMap.Marker(point); map.addOverlay(personMarker); }
+      else personMarker.setPosition(point);
+      if (!selectedFenceCode) map.panTo(point);
+    }
+  });
+}
+
+function renderLocationInfo(location) {
+  const container = document.getElementById('locationInfo'); container.replaceChildren();
+  const statusText = location.insideFence === true || location.inside_fence === true ? '安全区内' : '安全区外';
+  const fields = [['定位坐标', `${Number(location.longitude).toFixed(6)}, ${Number(location.latitude).toFixed(6)}`], ['围栏状态', statusText]];
+  fields.forEach(([label, value]) => {
+    const cell = document.createElement('div'); cell.className = 'fence-location-cell';
+    const caption = document.createElement('span'); caption.textContent = label;
+    const strong = document.createElement('strong'); strong.textContent = value;
+    cell.append(caption, strong); container.append(cell);
+  });
+  const time = location.sampleTime || location.sample_time;
+  document.getElementById('locationTime').textContent = time ? `最近上报：${new Date(time).toLocaleString('zh-CN')}` : '位置数据尚未更新';
+}
+
+document.addEventListener('DOMContentLoaded', initMap);
+window.addEventListener('beforeunload', () => { if (locationTimer) clearInterval(locationTimer); });
+</script>
+{% endblock %}

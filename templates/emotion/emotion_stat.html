@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}老人情感数据分析 - 腰间北斗智能监护系统{% endblock %}
+{% block page_name %}老人心理健康情感统计报表{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-box {
+        background: #fff;
+        padding: 18px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .chart-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .chart-height {
+        height: 320px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5>全社区老人情感趋势分析</h5>
+    <a href="/analysis/interaction" class="btn btn-outline-primary">切换义工互动报表</a>
+</div>
+
+<!-- 筛选条件区域 -->
+<div class="filter-box row g-3 align-items-center">
+    <div class="col-md-3">
+        <label>统计周期</label>
+        <select class="form-select" id="timeType">
+            <option value="7">近7天</option>
+            <option value="30">近30天</option>
+            <option value="90">近90天</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label>指定老人（可选）</label>
+        <select class="form-select" id="oldMan">
+            <option value="">全部老人</option>
+            <option>张爷爷</option>
+            <option>李奶奶</option>
+            <option>王婆婆</option>
+        </select>
+    </div>
+    <div class="col-md-3 align-self-end">
+        <button class="btn btn-primary" id="searchStat">生成统计图表</button>
+        <button class="btn btn-outline-secondary ms-2">导出报表</button>
+    </div>
+</div>
+
+<!-- 图表区域 -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="chart-card">
+            <h6>每日情感均值变化曲线</h6>
+            <div id="emotionLine" class="chart-height"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="chart-card">
+            <h6>情感类型占比</h6>
+            <div id="emotionPie" class="chart-height"></div>
+        </div>
+    </div>
+</div>
+
+<div class="chart-card">
+    <h6>持续负面情绪预警老人清单</h6>
+    <table class="table table-hover mt-3">
+        <thead>
+            <tr>
+                <th>老人姓名</th>
+                <th>连续低落天数</th>
+                <th>主要情绪</th>
+                <th>最近监测时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>李奶奶</td>
+                <td>4天</td>
+                <td>悲伤、无表情</td>
+                <td>2026-07-27 10:12</td>
+                <td><button class="btn btn-sm btn-primary">查看详情</button></td>
+            </tr>
+            <tr>
+                <td>王婆婆</td>
+                <td>2天</td>
+                <td>低落压抑</td>
+                <td>2026-07-27 09:45</td>
+                <td><button class="btn btn-sm btn-primary">查看详情</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script>
+const lineDom = document.getElementById("emotionLine");
+const pieDom = document.getElementById("emotionPie");
+const lineChart = echarts.init(lineDom);
+const pieChart = echarts.init(pieDom);
+
+// 初始图表数据
+function renderChart() {
+    lineChart.setOption({
+        tooltip: {trigger: "axis"},
+        legend: {data: ["平静","开心","悲伤"]},
+        xAxis: {data: ["周一","周二","周三","周四","周五","周六","周日"]},
+        yAxis: {},
+        series: [
+            {name:"平静",type:"line",data:[24,26,22,27,25,29,26]},
+            {name:"开心",type:"line",data:[9,11,8,10,12,14,13]},
+            {name:"悲伤",type:"line",data:[3,2,4,2,3,1,2]}
+        ]
+    });
+    pieChart.setOption({
+        series: [{
+            type: "pie",radius: "60%",
+            data: [
+                {name:"平静",value:169},
+                {name:"开心",value:77},
+                {name:"悲伤",value:17}
+            ]
+        }]
+    })
+}
+renderChart();
+
+// 查询按钮刷新图表
+document.getElementById("searchStat").onclick = function(){
+    alert("已切换筛选条件，重新加载统计数据");
+    renderChart();
+}
+
+// 窗口自适应
+window.addEventListener("resize",()=>{
+    lineChart.resize();
+    pieChart.resize();
+})
+</script>
+{% endblock %}

@@ -1,0 +1,3 @@
+# Dataset preparation only; not required by the Flask or AI runtime.
+gdown==5.2.0
+imageio-ffmpeg==0.6.0

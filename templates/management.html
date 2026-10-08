@@ -1,0 +1,2 @@
+{% extends 'appbase.html' %}
+{% block content %}<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2"><h5 class="mb-0">{{ title }}</h5>{% if page == 'persons' %}<span class="text-secondary">人员资料和人脸生效状态以服务器记录为准</span>{% endif %}</div><div id="management" class="management-grid"></div>{% endblock %}

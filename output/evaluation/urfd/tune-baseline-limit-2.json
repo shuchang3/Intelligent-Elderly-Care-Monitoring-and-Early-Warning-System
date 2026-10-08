@@ -1,0 +1,76 @@
+{
+  "createdAt": "2026-09-01T16:45:45+0800",
+  "split": "tune",
+  "device": "0",
+  "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "torch": "2.13.0+cu126",
+  "model": "D:\\IJ\\shijie-wujiang-master\\shijie-wujiang-master\\yolov8n-pose.pt",
+  "modelSha256": "c6fa93dd1ee4a2c18c900a45c1d864a1c6f7aba75d84f91648a30b7fb641d212",
+  "config": "D:\\IJ\\shijie-wujiang-master\\shijie-wujiang-master\\configs\\fall_detection.yaml",
+  "configSha256": "cd449f6c06a3ec80fb9ffd12b2443db0c17efe738c0220f7fd5907578cf6e5cc",
+  "summary": {
+    "TP": 1,
+    "FP": 0,
+    "TN": 0,
+    "FN": 1,
+    "precision": 1.0,
+    "recall": 0.5,
+    "falseAlertsPerHour": 0.0,
+    "meanPoseCoverage": 0.7275568181818182,
+    "meanProcessingFps": 76.97999156662635,
+    "medianLatencyFromGroundMs": 701,
+    "duplicateEvents": 0,
+    "gates": {
+      "precisionAtLeast0.80": true,
+      "recallAtLeast0.90": false,
+      "falseAlertsPerHourAtMost1": true,
+      "noDuplicateEvents": true
+    }
+  },
+  "clips": [
+    {
+      "clipId": "fall-01",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": false,
+      "outcome": "FN",
+      "predictionTimesMs": [],
+      "duplicateEvents": 0,
+      "eventStartMs": 2736,
+      "groundContactMs": 3737,
+      "eventEndMs": 5305,
+      "latencyFromGroundMs": null,
+      "frames": 160,
+      "durationSeconds": 5.279999999999999,
+      "poseCoverage": 0.71875,
+      "maxDownwardVelocity": 0.9124919621631347,
+      "maxAspectRatio": 1.7352280853614166,
+      "maxTorsoAngle": 70.59900062205999,
+      "processingSeconds": 3.794514900073409,
+      "processingFps": 42.1661277432076
+    },
+    {
+      "clipId": "fall-02",
+      "split": "tune",
+      "expectedFall": true,
+      "detectedFall": true,
+      "outcome": "TP",
+      "predictionTimesMs": [
+        3003
+      ],
+      "duplicateEvents": 0,
+      "eventStartMs": 1301,
+      "groundContactMs": 2302,
+      "eventEndMs": 3637,
+      "latencyFromGroundMs": 701,
+      "frames": 110,
+      "durationSeconds": 3.63,
+      "poseCoverage": 0.7363636363636363,
+      "maxDownwardVelocity": 0.6730831030643345,
+      "maxAspectRatio": 2.7541902043936384,
+      "maxTorsoAngle": 89.39492050625495,
+      "processingSeconds": 0.9839538999367505,
+      "processingFps": 111.79385539004511
+    }
+  ]
+}

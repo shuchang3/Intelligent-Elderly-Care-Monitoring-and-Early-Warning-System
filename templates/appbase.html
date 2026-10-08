@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{{ title }} - 腰间北斗智能监护系统</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/global.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body data-page="{{ page }}" data-role="{{ session.role }}">
+  {% set show_alert_sidebar = request.path == '/dashboard' %}
+  <div class="layout-container">
+    <aside class="sidebar">
+      <a class="sidebar-logo" href="{{ '/family/index' if session.role == 'FAMILY' else '/dashboard' }}">腰间北斗智能监护系统</a>
+      <nav class="sidebar-menu">
+        {% if session.role != 'FAMILY' %}
+          <a href="/dashboard" class="{{ 'active' if request.path == '/dashboard' else '' }}">总监控看板</a>
+          <a href="/monitor/live" class="{{ 'active' if '/monitor/' in request.path else '' }}">实时监控预览</a>
+          <a href="/alert/real" class="{{ 'active' if request.path == '/alert/real' else '' }}">实时告警事件</a>
+          <a href="/alert/history" class="{{ 'active' if request.path == '/alert/history' else '' }}">历史告警查询</a>
+          <a href="/person/list" class="{{ 'active' if '/person/' in request.path else '' }}">人员人脸库</a>
+          <a href="/analysis/tracks" class="{{ 'active' if request.path == '/analysis/tracks' else '' }}">人员轨迹</a>
+          <a href="/geofence/map" class="{{ 'active' if request.path == '/geofence/map' else '' }}">电子围栏</a>
+        {% else %}
+          <a href="/family/index" class="{{ 'active' if request.path == '/family/index' else '' }}">老人首页</a>
+          <a href="/family/alert" class="{{ 'active' if request.path == '/family/alert' else '' }}">告警记录</a>
+        {% endif %}
+        <a href="/analysis/emotion" class="{{ 'active' if request.path == '/analysis/emotion' else '' }}">情感统计报表</a>
+        <a href="/analysis/interaction" class="{{ 'active' if request.path == '/analysis/interaction' else '' }}">互动统计报表</a>
+        {% if session.role == 'ADMIN' %}
+          <a href="/setting/danger" class="{{ 'active' if request.path == '/setting/danger' else '' }}">系统配置</a>
+          <a href="/setting/users" class="{{ 'active' if request.path == '/setting/users' else '' }}">用户权限管理</a>
+        {% endif %}
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="top-header">
+        <h5 class="mb-0">{{ title }}</h5>
+        <div class="header-actions">
+          <span class="welcome-text">欢迎，{{ session.user.realName }}【{{ {'ADMIN':'管理员','STAFF':'护理人员','FAMILY':'家属'}.get(session.role, session.role) }}】</span>
+          <button id="personalButton" type="button" class="btn btn-outline-primary btn-sm">个人中心</button>
+          <form action="/logout" method="post" class="d-inline"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-outline-danger btn-sm ms-2" type="submit">退出登录</button></form>
+        </div>
+      </header>
+      <div class="page-body">
+        <div id="connectionStatus" class="connection-status" role="status">正在连接事件服务…</div>
+        <div id="globalError" class="alert alert-danger" role="alert" hidden></div>
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    {% if show_alert_sidebar %}<aside class="alert-sidebar"><h5 class="mb-3">实时告警消息</h5><div id="alertList"><div class="text-secondary">暂无新告警事件</div></div></aside>{% endif %}
+  </div>
+  <dialog id="detailDialog" class="event-dialog"><div class="dialog-tools"><button id="closeDialog" class="btn btn-outline-secondary btn-sm" type="button">关闭</button></div><div id="dialogBody"></div></dialog>
+  <dialog id="userDialog" class="event-dialog user-dialog"><div class="dialog-tools"><button id="closeUserDialog" class="btn-close" type="button" aria-label="关闭"></button></div><h5>个人中心设置</h5><div class="account-summary"><div><span>当前账号</span><strong>{{ session.user.username }}</strong></div><div><span>姓名</span><strong>{{ session.user.realName }}</strong></div><div><span>角色</span><strong>{{ {'ADMIN':'管理员','STAFF':'护理人员','FAMILY':'家属'}.get(session.role, session.role) }}</strong></div></div><form id="passwordForm" class="mt-4"><div class="mb-3"><label class="form-label">原密码</label><input class="form-control" name="oldPassword" type="password" autocomplete="current-password" required></div><div class="mb-3"><label class="form-label">新密码（至少12位）</label><input class="form-control" name="newPassword" type="password" autocomplete="new-password" minlength="12" required></div><div id="notificationActions" class="d-flex gap-2 flex-wrap"><button class="btn btn-primary" type="submit">修改密码</button><button id="notifyButton" type="button" class="btn btn-outline-primary">订阅浏览器通知</button></div></form><p class="text-secondary small mt-3 mb-0">修改密码成功后，当前登录会退出，需要使用新密码重新登录。</p></dialog>
+  <script>window.APP_CONFIG = {{ app_config|tojson }};</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/api.js"></script><script src="/static/js/socket_base.js"></script><script src="/static/js/pages.js"></script><script src="/static/js/health_status.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

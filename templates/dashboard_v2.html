@@ -1,0 +1,22 @@
+{% extends 'appbase.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2"><h5 class="mb-0">{{ '关联老人监护概况' if page == 'family' else '养老社区实时监控总览' }}</h5><button id="refresh" class="btn btn-outline-primary" type="button">刷新数据</button></div>
+<section id="stats" class="stats mb-4"></section>
+<div class="row g-4">
+  <div class="col-xl-6"><section class="chart-card h-100"><h5>近7天告警趋势</h5><div id="lineChart" class="dashboard-chart"></div></section></div>
+  <div class="col-xl-6"><section class="chart-card h-100"><h5>告警类型占比统计</h5><div id="pieChart" class="dashboard-chart"></div></section></div>
+</div>
+<section class="chart-card mt-4"><h5>近7日老人情感变化曲线</h5><div id="emotionChart" class="dashboard-chart"></div></section>
+{% if page == 'family' %}<section class="chart-card mt-4"><h6>已授权关联老人</h6><div id="familyPersons"></div><p class="text-secondary small mb-0">仅展示管理员授权关联的老人信息。</p></section>{% endif %}
+{% if page != 'family' %}
+<section class="mt-4"><h5 class="mb-3">快捷功能</h5><div class="row g-3">
+  <div class="col-md-4 col-xl-2"><a href="/monitor/live" class="quick-card"><h6>实时监控预览</h6><small>多路摄像头查看</small></a></div>
+  <div class="col-md-4 col-xl-2"><a href="/alert/real" class="quick-card"><h6>告警事件管理</h6><small>实时与历史告警</small></a></div>
+  <div class="col-md-4 col-xl-2"><a href="/person/list" class="quick-card"><h6>人员人脸库</h6><small>老人和护理人员录入</small></a></div>
+  <div class="col-md-4 col-xl-2"><a href="/analysis/emotion" class="quick-card"><h6>情感数据分析</h6><small>心理健康趋势</small></a></div>
+  <div class="col-md-4 col-xl-2"><a href="/analysis/interaction" class="quick-card"><h6>互动统计</h6><small>服务记录复核</small></a></div>
+  {% if session.role == 'ADMIN' %}<div class="col-md-4 col-xl-2"><a href="/setting/danger" class="quick-card"><h6>系统配置</h6><small>危险区和规则设置</small></a></div>{% endif %}
+</div></section>
+{% endif %}
+{% endblock %}
+{% block extra_js %}<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script><script src="/static/js/dashboard_charts.js"></script>{% endblock %}

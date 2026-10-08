@@ -1,0 +1,42 @@
+server:
+  address: ${BIND_ADDRESS:0.0.0.0}
+  port: ${BACKEND_PORT:8080}
+  error:
+    include-message: never
+spring:
+  config:
+    # IDEA may use either the project root or backend as its working directory.
+    # Both files are optional and .env.local remains excluded from Git.
+    import:
+      - optional:file:.env.local[.properties]
+      - optional:file:../.env.local[.properties]
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      connect-timeout: 250ms
+      timeout: 250ms
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/elder_care_dev?serverTimezone=Asia/Shanghai}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    hikari:
+      connection-timeout: 3000
+  sql:
+    init:
+      mode: never
+  servlet:
+    multipart:
+      max-file-size: 64MB
+      max-request-size: 65MB
+app:
+  redis-enabled: ${REDIS_ENABLED:false}
+  initialize: false
+  jwt-secret: ${JWT_SECRET:}
+  ai-key: ${AI_SERVICE_KEY:}
+  node-code: ${AI_NODE_CODE:NODE001}
+  admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:}
+  staff-password: ${BOOTSTRAP_STAFF_PASSWORD:}
+  storage: ${STORAGE_PATH:./uploads}
+  origins: ${ALLOWED_ORIGINS:http://127.0.0.1:5000,http://localhost:5000}
